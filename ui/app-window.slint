@@ -1,0 +1,239 @@
+import "./assets/NotoSans-Regular.ttf";
+import "./assets/geometry.ttf";
+import { ScrollView, TextEdit, Button, StandardButton } from "std-widgets.slint";
+import { Message } from "./components/message.slint";
+import { UserBar } from "components/userbar.slint";
+import { Chat } from "components/chat.slint";
+import { UserPanel } from "components/userpanel.slint";
+import { MyUserPanel } from "components/myuserpanel.slint";
+
+export component MainWindow inherits Window {
+    preferred-height: 480px;
+    preferred-width: 640px;
+    resize-border-width: 10px;
+    title: "ChatMad";
+    default-font-family: "Noto Sans";
+    icon: @image-url("./assets/icon.png");
+    max-height: 1080px;
+    max-width: 1920px;
+    min-height: 64px;
+    min-width: 64px;
+    callback sendMessage(string);
+    callback setChannel(string);
+    callback setUsername(string);
+    HorizontalLayout {
+        Rectangle {
+            background: #040010;
+            width: 27%;
+            Text {
+                text: "ChatMad";
+                x: 0px;
+                y: 0px;
+                width: 100%;
+                height: 36px;
+                color: #ffffff;
+                font-size: 24px;
+                font-weight: 700;
+                vertical-alignment: TextVerticalAlignment.center;
+                horizontal-alignment: TextHorizontalAlignment.center;
+            }
+
+            Rectangle {
+                x: 0px;
+                y: 36px;
+                width: 100%;
+                height: 24px;
+                background: #040010;
+                Text {
+                    text: "Chats";
+                    color: #ededed;
+                    font-size: 16px;
+                    font-weight: 600;
+                    width: parent.width;
+                    height: parent.height;
+                    vertical-alignment: TextVerticalAlignment.center;
+                    horizontal-alignment: TextHorizontalAlignment.center;
+                }
+            }
+
+            VerticalLayout {
+                x: 0px;
+                y: 36px + 24px;
+                alignment: start;
+                height: parent.height - 36px - 24px;
+                Chat {
+                    height: 36px;
+                    Name: "Art3mis";
+                    LastMessage: "sry ive had slack closed due to internet usage";
+                    Notifications: 2;
+                    Color: #ff6f6f;
+                    clicked(id) => {
+                        setChannel(id);
+                    }
+                }
+
+                Chat {
+                    height: 36px;
+                    Name: "F1nndegamer";
+                    LastMessage: "huh ha!";
+                    Notifications: 0;
+                    Active: true;
+                    Color: #6fff76;
+                    clicked(id) => {
+                        setChannel(id);
+                    }
+                }
+
+                Chat {
+                    height: 36px;
+                    Name: "Global Chat";
+                    LastMessage: "Aninimio: Hi!";
+                    Notifications: 0;
+                    Color: #e0ff6f;
+                    clicked(id) => {
+                        setChannel(id);
+                    }
+                }
+
+                Chat {
+                    height: 36px;
+                    Name: "CatCrave38";
+                    LastMessage: "Ching ching Guli guli";
+                    Notifications: 0;
+                    Color: #ff6ffa;
+                    clicked(id) => {
+                        setChannel(id);
+                    }
+                }
+
+                Chat {
+                    height: 36px;
+                    Name: "Alimad Co (You)";
+                    LastMessage: "You: <!DOCTYPE html><html><head>";
+                    Notifications: 0;
+                    Color: #6fffee;
+                    clicked(id) => {
+                        setChannel(id);
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            background: #ffffff;
+            width: 50%;
+            VerticalLayout {
+                alignment: end;
+                UserBar {
+                    height: 36px;
+                    Name: "F1nndegamer";
+                    Status: "Working on cube madness!";
+                    Color: #58ffd5;
+                }
+
+                Rectangle {
+                    width: 100%;
+                    height: parent.height - 36px - 72px;
+                    ScrollView {
+                        VerticalLayout {
+                            padding: 5px;
+                            spacing: 2px;
+                            alignment: end;
+                            Message {
+                                Text: "Hello!";
+                                Sender: "You";
+                                IsMine: true;
+                                TimeAgo: "10m ago";
+                            }
+
+                            Message {
+                                Text: "Nice day for fishing aint it";
+                                Sender: "You";
+                                IsMine: false;
+                                TimeAgo: "9m ago";
+                            }
+
+                            Message {
+                                Text: "Huh ha";
+                                Sender: "You";
+                                IsMine: true;
+                                TimeAgo: "9m ago";
+                            }
+
+                            Message {
+                                Text: "huh ha!";
+                                Sender: "F1nndegamer";
+                                IsMine: false;
+                                TimeAgo: "2m ago";
+                            }
+                        }
+                    }
+
+                    background: #070328;
+                    Button {
+                        x: parent.width - 32px;
+                        y: parent.height - 32px;
+                        width: 32px;
+                        height: 32px;
+                        text: ">";
+                        clicked => {
+                            sendMessage(message.text)
+                        }
+                    }
+                }
+
+                Rectangle {
+                    background: #112;
+                    height: 72px;
+                    width: 100%;
+                    message := TextEdit {
+                        width: 100%;
+                        height: 100%;
+                        text: "";
+                        wrap: TextWrap.word-wrap;
+                        key-pressed(event) => {
+                            if (!event.modifiers.shift) {
+                                if (event.text == Key.Return) {
+                                    root.sendMessage(self.text);
+                                    self.clear-focus();
+                                    self.text = "";
+                                    accept;
+                                }
+                            }
+                            reject;
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            background: #040020;
+            height: 100%;
+            width: 23%;
+            VerticalLayout {
+                alignment: start;
+                UserPanel {
+                    Name: "F1nndegamer";
+                    Status: "Working on cube madness!";
+                    LastActive: "Active 2m ago";
+                    Color: #6feeff;
+                    Aura: 184;
+                    height: 50%;
+                }
+
+                MyUserPanel {
+                    Name: "Alimad Co";
+                    Status: "Just chillin";
+                    LastActive: "Active now";
+                    Color: #7dff6f;
+                    Aura: 255;
+                    height: 50%;
+                    editName(name) => {
+                        root.setUsername(name);
+                    }
+                }
+            }
+        }
+    }
+}

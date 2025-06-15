@@ -1,0 +1,31 @@
+export component Message {
+    in property <string> Text;
+    in property <string> Sender;
+    in property <string> TimeAgo;
+    in property <bool> IsMine;
+    HorizontalLayout {
+        alignment: start;
+        Text {
+            text: Sender + ": ";
+            font-weight: 650;
+            horizontal-alignment: TextHorizontalAlignment.left;
+        }
+
+        Text {
+            text: Text;
+            font-weight: 400;
+            wrap: TextWrap.word-wrap;
+            horizontal-alignment: TextHorizontalAlignment.left;
+        }
+        Rectangle {
+            width: 3px;
+            opacity: 0;
+        }
+        Text {
+            text: TimeAgo;
+            font-weight: 300;
+            color: #888;
+            horizontal-alignment: TextHorizontalAlignment.right;
+        }
+    }
+}

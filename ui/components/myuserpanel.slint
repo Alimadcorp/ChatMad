@@ -1,0 +1,74 @@
+import { LineEdit } from "std-widgets.slint";
+export component MyUserPanel {
+    in property <string> Name;
+    in property <string> Status;
+    in property <int> Aura;
+    in property <string> LastActive;
+    in property <brush> Color;
+    callback editName(string);
+    VerticalLayout {
+        alignment: start;
+        Rectangle {
+            height: (parent.width - 100px) / 3;
+            width: 100px;
+            background: #0000;
+        }
+
+        Rectangle {
+            x: (parent.width - 100px) / 2;
+            height: 100px;
+            width: 100px;
+            background: Color;
+            border-radius: 10px;
+            clip: false;
+        }
+
+        Rectangle {
+            height: (parent.width - 100px) / 5;
+            width: 100px;
+            background: #0000;
+        }
+
+        LineEdit {
+            text: Name;
+            width: 100%;
+            key-pressed(event) => {
+                if (event.text == Key.Return) {
+                    if (self.text != "") {
+                        self.clear-focus();
+                        root.editName(self.text);
+                        accept;
+                    }
+                }
+                reject;
+            }
+            horizontal-alignment: TextHorizontalAlignment.center;
+        }
+
+        Text {
+            text: Status;
+            font-family: "Noto Sans";
+            font-weight: 400;
+            wrap: TextWrap.word-wrap;
+            horizontal-alignment: TextHorizontalAlignment.center;
+        }
+
+        Text {
+            text: "Aura: " + Aura;
+            font-family: "Noto Sans";
+            font-weight: min(400 + Aura, 900);
+            color: #faffb6;
+            wrap: TextWrap.word-wrap;
+            horizontal-alignment: TextHorizontalAlignment.center;
+        }
+
+        Text {
+            text: LastActive;
+            font-family: "Noto Sans";
+            font-weight: 300;
+            color: #999;
+            wrap: TextWrap.word-wrap;
+            horizontal-alignment: TextHorizontalAlignment.center;
+        }
+    }
+}
