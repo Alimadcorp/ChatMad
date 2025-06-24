@@ -42,6 +42,26 @@ pub struct Channel {
 }
 
 #[reducer]
+pub fn login(ctx: &ReducerContext, _uid: String, _password: String) -> Result<(), String> {
+    if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
+        if user.uid == _uid {
+            return Ok(())
+        } else {
+            if user.password == _password {
+                ctx.db.user().identity().update(User {
+                    identity: ctx.sender,
+                    ..user
+                });
+                return Ok(())
+            } else {
+                return Err(("Incorrect password".to_string()))
+            }
+        }
+    }
+    Ok(())
+}
+
+#[reducer]
 pub fn new_user(
     ctx: &ReducerContext,
     _usnm: String,
@@ -52,21 +72,16 @@ pub fn new_user(
     let image2 = "https://i.ibb.co/DDhxzxBW/2.png";
     let image3 = "https://i.ibb.co/wF9j64TF/3.png";
     let image4 = "https://i.ibb.co/Q7CHKpVh/4.png";
-    let images = vec![
-        image1.to_string(),
-        image2.to_string(),
-        image3.to_string(),
-        image4.to_string(),
-    ];
+    let images = vec![image1, image2, image3, image4];
     let to_put: usize = (ctx.timestamp.to_micros_since_unix_epoch() % 4 as i64) as usize;
-    let img = images[to_put].clone();
+    let img = &images[to_put];
     if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
         Err(("User already exists".to_string()))
     } else {
         ctx.db.user().insert(User {
             name: _usnm,
             status: None,
-            pfp: img,
+            pfp: img.to_string(),
             password: _password,
             uid: _uid,
             lastActive: ctx.timestamp,
